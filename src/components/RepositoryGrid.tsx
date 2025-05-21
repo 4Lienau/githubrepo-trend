@@ -19,6 +19,7 @@ interface Repository {
   url: string;
   stars: number;
   forks: number;
+  watchers_count: number;
   language: string;
   owner: {
     login: string;
@@ -41,7 +42,6 @@ const RepositoryGrid = ({
   const [sortBy, setSortBy] = useState<"stars" | "forks" | "updated">("stars");
   const [filterLanguage, setFilterLanguage] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [minStars, setMinStars] = useState<number>(0);
 
   // Default repositories for display when none are provided
   const defaultRepositories: Repository[] = [
@@ -154,8 +154,7 @@ const RepositoryGrid = ({
       ? repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         repo.description.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
-    const matchesStars = repo.stars >= minStars;
-    return matchesLanguage && matchesSearch && matchesStars;
+    return matchesLanguage && matchesSearch;
   });
 
   // Get unique languages for filter dropdown
@@ -209,26 +208,11 @@ const RepositoryGrid = ({
               />
             </div>
 
-            <div className="relative">
-              <Star className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                type="number"
-                placeholder="Min stars"
-                value={minStars || ""}
-                onChange={(e) =>
-                  setMinStars(Math.max(0, parseInt(e.target.value) || 0))
-                }
-                className="pl-8 w-[120px]"
-                min="0"
-              />
-            </div>
-
             <Button
               variant="outline"
               size="icon"
               onClick={() => {
                 setSearchTerm("");
-                setMinStars(0);
               }}
             >
               <Filter className="h-4 w-4" />
@@ -265,7 +249,7 @@ const RepositoryGrid = ({
                 owner: repo.owner?.login || "",
                 stars: repo.stars || 0,
                 forks: repo.forks || 0,
-                watchers: 0, // Default value since it's not in the Repository interface
+                watchers: repo.watchers_count || 0,
                 language: repo.language || "Unknown",
                 readmeUrl: `${repo.url}/blob/main/README.md` || "",
                 avatarUrl: repo.owner?.avatar_url,
