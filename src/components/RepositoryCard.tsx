@@ -154,8 +154,7 @@ const RepositoryCard = ({
         <div className="mt-2">
           <h4 className="text-sm font-semibold mb-1">Analysis</h4>
           <p className="text-xs text-gray-600 line-clamp-4">
-            {repository.analysis ||
-              `This ${repository.language || ""} repository has gained ${formatNumber(repository.stars)} stars and been forked ${formatNumber(repository.forks)} times.`}
+            {`Created on ${formatDate(repository.created_at)}. This ${repository.language || ""} repository has gained ${formatNumber(repository.stars)} stars and been forked ${formatNumber(repository.forks)} times. ${repository.analysis || ""}`}
           </p>
         </div>
       </CardContent>
